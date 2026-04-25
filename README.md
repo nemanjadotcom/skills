@@ -15,7 +15,7 @@ A public collection of Claude Code skills and reusable agent workflows.
 
 ## General
 
-- `ask-questions-if-underspecified`
+- `ask-questions-if-underspecified` - https://github.com/trailofbits/skills/tree/main/plugins/ask-questions-if-underspecified
   - Based on: 
   - Forces clarification when requirements are vague or incomplete before execution.
 
