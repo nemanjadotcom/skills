@@ -12,18 +12,22 @@ A public collection of Claude Code skills and reusable agent workflows.
   - Generate brand systems, visual directions, typography ideas, color palettes, and presentation-style layouts.
 
 ### Planning
+Inside Ralph folder. 
 
+Skill by Matt Pockock - https://github.com/mattpocock/skills 
 - `grill-me`
   - Stress-test a product idea or implementation plan with focused questions before execution.
-
-- `shape`
-  - Turn a rough idea into a complete PRD by auto-answering the product and engineering decision tree.
 
 - `to-prd`
   - Convert conversation context or a plan into a PRD suitable for implementation.
 
 - `to-issues`
-  - Break a PRD into independently grabbable GitHub issues using vertical slices.
+ - Break a PRD into independently grabbable GitHub issues using vertical slices.
+ 
+-  `shape`
+- Turn a rough idea into a complete PRD by auto-answering the product and engineering decision tree.
+- Original skill creator https://github.com/TheCraigHewitt/skills/tree/main/coding/shape
+
 
 ### Ralph
 
