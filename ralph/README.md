@@ -1,63 +1,137 @@
-# Claude Skills
+# Ralph Loop
 
-A public collection of Claude Code skills and reusable agent workflows.
+Ralph is a small set of agent skills and scripts for turning a product idea into shipped code:
 
----
+1. Stress-test the idea.
+2. Write a PRD.
+3. Break the PRD into small vertical slices.
+4. Let an agent implement one slice at a time with tests, commits, and review gates.
 
-## Skills
+This repo contains three versions:
 
-### Design
+- **Ralph for Claude**: Claude Code-oriented workflow.
+- **Ralph for Codex**: Codex-oriented workflow with model config, worktree isolation, and CodeRabbit review loops.
+- **Ralph Local**: local-file workflow that uses PRDs and task specs in `docs/roadmap/` instead of GitHub issues for task selection.
 
-- `design-brand-kit`
-  - Generate brand systems, visual directions, typography ideas, color palettes, and presentation-style layouts.
+## Repo Layout
 
-### Planning
+```text
+RALPH LOOP/ralph/
+  ralph-claude/   Claude Code skills and scripts
+  ralph-codex/    Codex skills and scripts
+  ralph-local/    Local PRD/task workflow
+```
 
-- `grill-me`
-  - Stress-test a product idea or implementation plan with focused questions before execution.
+There are also ready-to-copy `.agents/skills/` and `.claude/skills/` folders under `RALPH LOOP/` for project-local installs.
 
-- `shape`
-  - Turn a rough idea into a complete PRD by auto-answering the product and engineering decision tree.
+## Claude Version
 
-- `to-prd`
-  - Convert conversation context or a plan into a PRD suitable for implementation.
+Use this when your implementation agent is Claude Code.
 
-- `to-issues`
-  - Break a PRD into independently grabbable GitHub issues using vertical slices.
+Pipeline:
 
-### Ralph
+```text
+/grill-me -> /to-prd -> /to-issues -> /ralph
+```
 
-- `ralph`
-  - Autonomous PRD implementation loop for GitHub issue-based workflows.
-  - Includes Claude and Codex variants.
+Main idea:
 
-- `ralph-local`
-  - Local PRD implementation loop using `docs/roadmap/prds/` and `docs/roadmap/tasks/` instead of GitHub issues for task selection.
+- PRDs and sub-tasks live as GitHub issues.
+- `ralph-once.sh` implements one sub-issue and stops.
+- `afk-ralph.sh` runs multiple iterations and opens a PR.
+- AFK mode uses Docker sandboxing.
 
-- `prd-to-tasks`
-  - Convert a local PRD into Ralph Local task specs.
+Useful files:
 
----
+```text
+RALPH LOOP/ralph/ralph-claude/
+```
 
-## General
+## Codex Version
 
-- `ask-questions-if-underspecified` - https://github.com/trailofbits/skills/tree/main/plugins/ask-questions-if-underspecified
-  - Forces clarification when requirements are vague or incomplete before execution.
+Use this when your implementation agent is Codex.
 
----
+Pipeline:
 
-## Disclaimer
+```text
+/grill-me -> /to-prd -> /to-issues -> /ralph
+```
 
-Always inspect skills before using them.
+Main idea:
 
-Skills may contain unsafe prompts, shell commands, automation logic, or malicious instructions.
+- PRDs and sub-tasks live as GitHub issues.
+- Codex implements sub-issues with TDD.
+- Work can run once, AFK, or AFK with review.
+- Model defaults live in `ralph/config.env`.
+- Worktree mode keeps implementation isolated without Docker.
 
-Do not blindly trust or execute skills from the internet.
+Useful files:
 
-Review everything manually before use.
+```text
+RALPH LOOP/ralph/ralph-codex/
+```
 
----
+Common entrypoints:
 
-## License
+```bash
+.agents/skills/ralph/ralph-once.sh <prd-issue-number>
+.agents/skills/ralph/afk-ralph.sh <prd-issue-number> 20
+.agents/skills/ralph/ralph-afk-and-review-worktree.sh <prd-issue-number> 20 10
+```
 
-MIT
+## Local Version
+
+Use this when you want the planning source of truth in your repo instead of GitHub issues.
+
+Pipeline:
+
+```text
+/shape-local -> /prd-to-tasks -> /ralph-local
+```
+
+Main idea:
+
+- PRDs live in `docs/roadmap/prds/`.
+- Tasks live in `docs/roadmap/tasks/`.
+- Task IDs derive from the PRD ID:
+
+```text
+prd-1.1 -> 1.1.1, 1.1.2, 1.1.3
+```
+
+- Ralph Local picks the next unblocked task from the PRD task block.
+- After all tasks are done, it opens a GitHub PR and can iterate on CodeRabbit feedback.
+
+Useful files:
+
+```text
+RALPH LOOP/ralph/ralph-local/
+```
+
+Common entrypoints:
+
+```bash
+.agents/skills/ralph-local/ralph-local.sh <prd-ref>
+.agents/skills/ralph-local/ralph-local.sh <prd-ref> afk 20
+```
+
+## Requirements
+
+- Git
+- GitHub CLI (`gh`) for GitHub issue and PR flows
+- Claude Code for the Claude version
+- Codex CLI for the Codex version
+- Docker Desktop for Claude AFK sandbox mode
+- Node.js for Ralph Local helper scripts
+
+## Recommended Use
+
+Start human-in-the-loop:
+
+```bash
+ralph-once.sh <prd-or-issue>
+```
+
+Once the first slice looks good, switch to AFK mode.
+
+Keep PRDs clear and sub-issues small. Ralph works best when each task is a thin vertical slice with concrete acceptance criteria.
