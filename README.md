@@ -10,6 +10,9 @@ A public collection of Claude Code skills and reusable agent workflows.
 
 - `design-brand-kit`
   - Generate brand systems, visual directions, typography ideas, color palettes, and presentation-style layouts.
+ 
+- `cinematic-html-presentation-builder`
+   - Generate beautiful cinematic html presentations like in my videos. Use coolors.com to set your pallete. 
 
 ### Planning
 Inside Ralph folder. 
