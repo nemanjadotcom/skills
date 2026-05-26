@@ -6,6 +6,10 @@ A public collection of Claude Code skills and reusable agent workflows.
 
 ## Skills
 
+### Security 
+- agent-vault-setup
+  - agent-vault-setup skill and reference PRDs I used in my video.
+
 ### Design
 
 - `design-brand-kit`
